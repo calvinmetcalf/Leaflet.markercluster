@@ -74,7 +74,7 @@ out=[];
                 notMatched.push(v);
             }
         });
-        if(matched.length===0{
+        if(matched.length===0){
             out.push([current[0].length,current[1],current[2]]);
             current = clusters.pop();
             matched=[];
