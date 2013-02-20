@@ -5,3 +5,9 @@ obj
 # mstest test results
 TestResults
 node_modules
+
+# cloud9/node stuff
+.c9revisions
+*~
+~*
+node_modules
