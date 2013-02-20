@@ -24,22 +24,21 @@ function addToR(pts){
         }
         return rTree.search({x:blat1,y:blng1,w:(blat2-blat1),h:(blng2-blng1)});
     };
-    function cluster(blat1,blng1,blat2,blng2){
+    function cluster(blat1,blng1,blat2,blng2,size){
         var points = rTree.search({x:blat1,y:blng1,w:(blat2-blat1),h:(blng2-blng1)});
-     var pLen = Math.sqrt(points.length/2);
-     var size = boundSize(points);
-     var sizeRatio = Math.floor(pLen/((blat2-blat1)/size[0]+(blng2-blng1)/size[1]));
-     //self.postMessage({console:[pLen,size,sizeRatio,((blat2-blat1)/size[0]+(blng2-blng1)/size[1])]});
+     var pLen = Math.floor(Math.sqrt(points.length/2));
+      var tempclusters=[];
+     //self.postMessage({console:[]});
      var out = {points:[],clusters:[]}
   if(pLen>6){
-     var clusters = clusterfck.kmeans(points,sizeRatio?sizeRatio:1);
+     var clusters = clusterfck.kmeans(points,pLen);
         clusters.forEach(function(pts){
             if(pts.length===0){
                 return;
             }else if(pts.length < 4){
                pts.forEach(function(v){out.points.push(v);});
             }else{
-                 out.clusters.push([pts.length,hull(pts),centroid(pts)]);
+                 tempclusters.push([pts.length,hull(pts),centroid(pts)]);
             }
            
         });
@@ -48,6 +47,11 @@ function addToR(pts){
           function(v){out.points.push(v);}
       );
   }
+if(tempclusters.length<2){
+out.clusters=tempclusters
+}else{
+
+}
   self.postMessage(out);
     }
   
