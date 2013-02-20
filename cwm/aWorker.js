@@ -24,7 +24,7 @@ function addToR(pts){
         }
         return rTree.search({x:blat1,y:blng1,w:(blat2-blat1),h:(blng2-blng1)});
     };
-    function cluster(blat1,blng1,blat2,blng2,size){
+    function makeClusters(blat1,blng1,blat2,blng2,size){
         var points = rTree.search({x:blat1,y:blng1,w:(blat2-blat1),h:(blng2-blng1)});
      var pLen = Math.floor(Math.sqrt(points.length/2));
       var tempclusters=[];
@@ -38,7 +38,7 @@ function addToR(pts){
             }else if(pts.length < 4){
                pts.forEach(function(v){out.points.push(v);});
             }else{
-                 tempclusters.push([pts.length,hull(pts),centroid(pts)]);
+                 tempclusters.push([pts,hull(pts),centroid(pts)]);
             }
            
         });
@@ -48,13 +48,29 @@ function addToR(pts){
       );
   }
 if(tempclusters.length<2){
-out.clusters=tempclusters
+out.clusters=tempclusters.map(function(v){
+return [v[0].length,v[1],v[2]];
+})
 }else{
-
+out.clusters=distanceCluster(tempclusters);
 }
   self.postMessage(out);
     }
-  
+distanceCluster(clusters,size){
+    var current = clusters.pop(),
+    matched=[],
+    notMatched=[];
+    while(current){
+        clusters.forEach(function(v){
+            var dif=[
+            current[0]>v[0]?current[0]-v[0]:v[0]-current[0],
+            current[1]>v[1]?current[0]-v[1]:v[1]-current[1]
+            ];
+        });
+
+    
+    }
+}  
 self.onmessage=function(event){
     switch(event.data.action){
         case "create":
@@ -67,7 +83,7 @@ self.onmessage=function(event){
             self.postMessage(getBbox.apply(self,event.data.bounds));
             break;
         case "cluster":
-           cluster.apply(self,event.data.bounds);
+           makeClusters.apply(self,event.data.bounds);
             break;
         case "tree":
             self.postMessage(JSON.stringify(rTree.get_tree()));
