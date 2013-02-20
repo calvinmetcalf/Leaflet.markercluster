@@ -47,16 +47,16 @@ function addToR(pts){
           function(v){out.points.push(v);}
       );
   }
-if(tempclusters.length<2){
-out.clusters=tempclusters.map(function(v){
-return [v[0].length,v[1],v[2]];
-})
-}else{
-out.clusters=distanceCluster(tempclusters);
-}
+  if(tempclusters.length<2){
+    out.clusters=tempclusters.map(function(v){
+      return [v[0].length,v[1],v[2]];
+    })
+  }else{
+    out.clusters=distanceCluster(tempclusters);
+  }
   self.postMessage(out);
     }
-distanceCluster(clusters,size){
+function distanceCluster(clusters,size){
     var current = clusters.pop(),
     matched=[],
     notMatched=[],
