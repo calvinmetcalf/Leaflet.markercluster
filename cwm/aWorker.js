@@ -59,17 +59,38 @@ out.clusters=distanceCluster(tempclusters);
 distanceCluster(clusters,size){
     var current = clusters.pop(),
     matched=[],
-    notMatched=[];
+    notMatched=[],
+allpoints,
+out=[];
     while(current){
         clusters.forEach(function(v){
             var dif=[
-            current[0]>v[0]?current[0]-v[0]:v[0]-current[0],
-            current[1]>v[1]?current[0]-v[1]:v[1]-current[1]
+            current[2][0]>v[2][0]?current[2][0]-v[2][0]:v[2][0]-current[2][0],
+            current[2][1]>v[2][1]?current[2][0]-v[2][1]:v[2][1]-current[2][1]
             ];
+            if(dif[0]<size[0]&&dif[1]<size[1]){
+                matched.push(v);
+           }else{
+                notMatched.push(v);
+            }
         });
-
-    
+        if(matched.length===0{
+            out.push([current[0].length,current[1],current[2]]);
+            current = clusters.pop();
+            matched=[];
+            notMatched=[];
+        }else{
+            matched.push(current);
+            allpoints = matched.reduce(function(a,b){
+                return a.concat(b.map(function(v){return v[0];}));
+            },[]);
+            current = [allpoints,hull(allpoints),centroid(allpoints)];
+            matched = [];
+            clusters=notMatched;
+            notMatched=[];
+        }
     }
+    return out;
 }  
 self.onmessage=function(event){
     switch(event.data.action){
