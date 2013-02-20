@@ -262,6 +262,9 @@ var boxSelect = new BoxSelect(m);//new box select
 boxSelect.enable();//add it
 m.on("boxselectend",function(e){redoBox(e.boxSelectBounds);});//put the behavior in.
 function containerInc(inc){
-    return [m.containerPointToLatLng([0,0]).lat-m.containerPointToLatLng([inc,inc]).lat,m.containerPointToLatLng([inc,inc]).lng-m.containerPointToLatLng([0,0]).lng];
+    var cont = [m.containerPointToLatLng([0,0]).lat-m.containerPointToLatLng([inc,inc]).lat,m.containerPointToLatLng([inc,inc]).lng-m.containerPointToLatLng([0,0]).lng];
+if (cont[0]<0) {cont[0]=0-cont[0]}
+if (cont[1]<0) {cont[1]=0-cont[1]}
+return cont;
 }
 </script>
